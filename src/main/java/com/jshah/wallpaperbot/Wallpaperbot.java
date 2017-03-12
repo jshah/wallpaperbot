@@ -10,10 +10,14 @@ import net.dean.jraw.models.Submission;
 import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SubredditPaginator;
 import net.dean.jraw.paginators.TimePeriod;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -39,6 +43,25 @@ public class Wallpaperbot {
         wallpapersPaginator(reddit);
     }
 
+    private void downloadUrl(String url) {
+        try {
+            URL myUrl = new URL(url);
+            String fileName = FilenameUtils.getName(myUrl.getPath());
+            File file = new File("files/" + fileName);
+            FileUtils.copyURLToFile(myUrl, file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sleep() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     private void wallpapersPaginator(RedditClient reddit) {
         SubredditPaginator paginator = new SubredditPaginator(reddit);
         paginator.setLimit(10);
@@ -47,13 +70,17 @@ public class Wallpaperbot {
         paginator.setSubreddit("wallpapers");
 
         Listing<Submission> listing = paginator.next(true);
-        while(!listing.isEmpty()) {
-            String title = listing.get(0).getTitle();
-            String url = listing.get(0).getUrl();
-            System.out.println(title + " : " + url);
-            listing = paginator.next(true);
-        }
+        for (Submission post : listing) {
+//            String title = post.getTitle();
+            String url = post.getUrl();
+            Integer score = post.getScore();
 
+            if (score > 1000) {
+                downloadUrl(url);
+            }
+            sleep();
+//            System.out.println(String.format("%d: %s [%s] : %s", i, title, score, url));
+        }
     }
 
     private void authenticate(RedditClient reddit, Credentials credentials) {
