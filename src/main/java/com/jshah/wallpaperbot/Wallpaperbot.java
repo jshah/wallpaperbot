@@ -1,6 +1,5 @@
 package com.jshah.wallpaperbot;
 
-
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.UserAgent;
 import net.dean.jraw.http.oauth.Credentials;
@@ -33,13 +32,13 @@ public class Wallpaperbot {
         loadProperties();
         String password = properties.getProperty("password");
         String secret = properties.getProperty("secret");
+        String clientID = properties.getProperty("clientid");
 
-        UserAgent userAgent = UserAgent.of(AppResources.platform, AppResources.clientID, AppResources.version, AppResources.username);
+        UserAgent userAgent = UserAgent.of(AppResources.platform, clientID, AppResources.version, AppResources.username);
         RedditClient reddit = new RedditClient(userAgent);
-        Credentials credentials = Credentials.script(AppResources.username, password, AppResources.clientID, secret);
+        Credentials credentials = Credentials.script(AppResources.username, password, clientID, secret);
         authenticate(reddit, credentials);
-
-        // find top wallpapers
+        // find top wallpapers of the week in /r/wallpapers and download image for post > 1000 score
         wallpapersPaginator(reddit);
     }
 
@@ -71,15 +70,12 @@ public class Wallpaperbot {
 
         Listing<Submission> listing = paginator.next(true);
         for (Submission post : listing) {
-//            String title = post.getTitle();
             String url = post.getUrl();
             Integer score = post.getScore();
-
             if (score > 1000) {
                 downloadUrl(url);
             }
             sleep();
-//            System.out.println(String.format("%d: %s [%s] : %s", i, title, score, url));
         }
     }
 
