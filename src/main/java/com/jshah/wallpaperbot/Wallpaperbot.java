@@ -25,21 +25,11 @@ import java.util.Properties;
 
 public class Wallpaperbot {
     private final Properties properties = new Properties();
-    private InputStream inputStream = null;
 
     public void run() {
-        // read from config.properties
-        loadProperties();
-        String password = properties.getProperty("password");
-        String secret = properties.getProperty("secret");
-        String clientID = properties.getProperty("clientid");
-
-        UserAgent userAgent = UserAgent.of(AppResources.platform, clientID, AppResources.version, AppResources.username);
-        RedditClient reddit = new RedditClient(userAgent);
-        Credentials credentials = Credentials.script(AppResources.username, password, clientID, secret);
-        authenticate(reddit, credentials);
-        // find top wallpapers of the week in /r/wallpapers and download image for post > 1000 score
+        RedditClient reddit = authenticateReddit();
         wallpapersPaginator(reddit);
+        // TODO: need to close properties file
     }
 
     private void downloadUrl(String url) {
@@ -47,6 +37,7 @@ public class Wallpaperbot {
             URL myUrl = new URL(url);
             String fileName = FilenameUtils.getName(myUrl.getPath());
             File file = new File("files/" + fileName);
+            // TODO: need to handle downloading from different websites i.e: imgur, flickr, etc.
             FileUtils.copyURLToFile(myUrl, file);
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,13 +52,18 @@ public class Wallpaperbot {
         }
     }
 
+    /*
+     * Find top wallpapers of the week in /r/wallpapers and download image for post > 1000 score
+     */
     private void wallpapersPaginator(RedditClient reddit) {
         SubredditPaginator paginator = new SubredditPaginator(reddit);
-        paginator.setLimit(10);
+        paginator.setLimit(25);
         paginator.setSorting(Sorting.TOP);
         paginator.setTimePeriod(TimePeriod.WEEK);
         paginator.setSubreddit("wallpapers");
 
+        // paginator.next() flips through each page, need to handle logic for multiple pages and see what happens
+        // what is max limit per page?
         Listing<Submission> listing = paginator.next(true);
         for (Submission post : listing) {
             String url = post.getUrl();
@@ -76,21 +72,33 @@ public class Wallpaperbot {
                 downloadUrl(url);
             }
             sleep();
+//            System.out.println(i + ": " + post.getTitle() + " " + score);
         }
     }
 
-    private void authenticate(RedditClient reddit, Credentials credentials) {
+    private RedditClient authenticateReddit() {
+        // read from config.properties
+        loadProperties();
+        String password = properties.getProperty("redditPassword");
+        String secret = properties.getProperty("redditSecret");
+        String clientID = properties.getProperty("redditClientID");
+
+        UserAgent userAgent = UserAgent.of(AppResources.platform, clientID, AppResources.version, AppResources.username);
+        RedditClient reddit = new RedditClient(userAgent);
+        Credentials credentials = Credentials.script(AppResources.username, password, clientID, secret);
+
         try {
             OAuthData oAuthData = reddit.getOAuthHelper().easyAuth(credentials);
             reddit.authenticate(oAuthData);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return reddit;
     }
 
     private void loadProperties() {
         try {
-            inputStream = new FileInputStream(AppResources.config);
+            InputStream inputStream = new FileInputStream(AppResources.config);
             properties.load(inputStream);
         } catch (IOException ex) {
             ex.printStackTrace();
