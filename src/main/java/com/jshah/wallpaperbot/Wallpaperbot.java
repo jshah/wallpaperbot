@@ -51,14 +51,6 @@ public class Wallpaperbot {
         imageHandler.executeDownload();
     }
 
-    private void sleep() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     /*
      * Find top wallpapers of the week in /r/wallpapers and download image for post > 1000 score
      */
@@ -79,8 +71,6 @@ public class Wallpaperbot {
             if (score > 1000) {
                 downloadUrl(url);
             }
-            // reddit only allows a request every 1 minute
-            sleep();
 //            i++;
 //            System.out.println(i + ": " + post.getTitle() + " " + score);
         }
