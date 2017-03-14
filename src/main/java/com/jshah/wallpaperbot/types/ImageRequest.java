@@ -1,18 +1,14 @@
 package com.jshah.wallpaperbot.types;
 
 /**
- * Created by jay.shah on 3/12/17.
+ * Created by jay.shah on 3/13/17.
  */
-
-public class ImgurRequest extends Request implements ImageHandler {
-    private void authenticate() {
-
-    }
-
+public class ImageRequest extends Request implements ImageHandler {
     public void setupDownload(String url) {
-    }
-
+        this.url = url;
+    };
     public void executeDownload() {
         downloadFile(this.url);
-    };
+    }
+    ;
 }

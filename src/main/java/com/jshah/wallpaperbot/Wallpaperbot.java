@@ -1,5 +1,9 @@
 package com.jshah.wallpaperbot;
 
+import com.jshah.wallpaperbot.types.ImageHandler;
+import com.jshah.wallpaperbot.types.ImageRequest;
+import com.jshah.wallpaperbot.types.ImgurRequest;
+import com.jshah.wallpaperbot.types.Request;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.UserAgent;
 import net.dean.jraw.http.oauth.Credentials;
@@ -25,30 +29,33 @@ import java.util.Properties;
 
 public class Wallpaperbot {
     private final Properties properties = new Properties();
+    private InputStream inputStream;
 
     public void run() {
         RedditClient reddit = authenticateReddit();
         wallpapersPaginator(reddit);
-        // TODO: need to close properties file
+    }
+
+    private ImageHandler findRequestType(String url) {
+        if (url.contains("imgur.com") && !url.contains("i.imgur.com")) {
+            return new ImgurRequest();
+        }
+        else {
+            return new ImageRequest();
+        }
     }
 
     private void downloadUrl(String url) {
-        try {
-            URL myUrl = new URL(url);
-            String fileName = FilenameUtils.getName(myUrl.getPath());
-            File file = new File("files/" + fileName);
-            // TODO: need to handle downloading from different websites i.e: imgur, flickr, etc.
-            FileUtils.copyURLToFile(myUrl, file);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ImageHandler imageHandler = findRequestType(url);
+        imageHandler.setupDownload(url);
+        imageHandler.executeDownload();
     }
 
     private void sleep() {
         try {
             Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -64,6 +71,7 @@ public class Wallpaperbot {
 
         // paginator.next() flips through each page, need to handle logic for multiple pages and see what happens
         // what is max limit per page?
+//        int i = 1;
         Listing<Submission> listing = paginator.next(true);
         for (Submission post : listing) {
             String url = post.getUrl();
@@ -71,7 +79,9 @@ public class Wallpaperbot {
             if (score > 1000) {
                 downloadUrl(url);
             }
+            // reddit only allows a request every 1 minute
             sleep();
+//            i++;
 //            System.out.println(i + ": " + post.getTitle() + " " + score);
         }
     }
@@ -90,18 +100,29 @@ public class Wallpaperbot {
         try {
             OAuthData oAuthData = reddit.getOAuthHelper().easyAuth(credentials);
             reddit.authenticate(oAuthData);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            closeProperties();
         }
         return reddit;
     }
 
+    private void closeProperties() {
+        try {
+            inputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void loadProperties() {
         try {
-            InputStream inputStream = new FileInputStream(AppResources.config);
+            inputStream = new FileInputStream(AppResources.config);
             properties.load(inputStream);
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
