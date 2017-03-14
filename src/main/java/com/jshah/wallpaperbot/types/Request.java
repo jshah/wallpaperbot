@@ -11,7 +11,7 @@ import java.net.URL;
  */
 
 public abstract class Request {
-    protected String url;
+    protected String url = "";
 
     public void downloadFile(String url) {
         try {

@@ -13,6 +13,6 @@ public class ImgurRequest extends Request implements ImageHandler {
     }
 
     public void executeDownload() {
-        downloadFile(this.url);
+//        downloadFile(this.url);
     };
 }
