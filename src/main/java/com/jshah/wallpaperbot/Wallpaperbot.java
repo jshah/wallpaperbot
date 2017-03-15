@@ -1,9 +1,10 @@
 package com.jshah.wallpaperbot;
 
+import com.jshah.wallpaperbot.resources.AppResources;
+import com.jshah.wallpaperbot.resources.ConfigHandler;
 import com.jshah.wallpaperbot.types.ImageHandler;
 import com.jshah.wallpaperbot.types.ImageRequest;
 import com.jshah.wallpaperbot.types.ImgurRequest;
-import com.jshah.wallpaperbot.types.Request;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.UserAgent;
 import net.dean.jraw.http.oauth.Credentials;
@@ -13,14 +14,10 @@ import net.dean.jraw.models.Submission;
 import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SubredditPaginator;
 import net.dean.jraw.paginators.TimePeriod;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -28,9 +25,6 @@ import java.util.Properties;
  */
 
 public class Wallpaperbot {
-    private final Properties properties = new Properties();
-    private InputStream inputStream;
-
     public void run() {
         RedditClient reddit = authenticateReddit();
         wallpapersPaginator(reddit);
@@ -68,7 +62,7 @@ public class Wallpaperbot {
         for (Submission post : listing) {
             String url = post.getUrl();
             Integer score = post.getScore();
-            if (score > 1000) {
+            if (score > 100 && score < 200) {
                 downloadUrl(url);
             }
 //            i++;
@@ -78,7 +72,8 @@ public class Wallpaperbot {
 
     private RedditClient authenticateReddit() {
         // read from config.properties
-        loadProperties();
+        ConfigHandler configHandler = new ConfigHandler();
+        Properties properties = configHandler.loadProperties();
         String password = properties.getProperty("redditPassword");
         String secret = properties.getProperty("redditSecret");
         String clientID = properties.getProperty("redditClientID");
@@ -94,26 +89,8 @@ public class Wallpaperbot {
             e.printStackTrace();
         }
         finally {
-            closeProperties();
+            configHandler.closeProperties();
         }
         return reddit;
     }
-
-    private void closeProperties() {
-        try {
-            inputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadProperties() {
-        try {
-            inputStream = new FileInputStream(AppResources.config);
-            properties.load(inputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }

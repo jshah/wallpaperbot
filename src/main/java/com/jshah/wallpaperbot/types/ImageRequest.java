@@ -7,9 +7,8 @@ package com.jshah.wallpaperbot.types;
 public class ImageRequest extends Request implements ImageHandler {
     public void setupDownload(String url) {
         this.url = url;
-    };
+    }
     public void executeDownload() {
         downloadFile(this.url);
     }
-    ;
 }
