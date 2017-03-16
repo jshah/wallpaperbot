@@ -62,7 +62,7 @@ public class Wallpaperbot {
         for (Submission post : listing) {
             String url = post.getUrl();
             Integer score = post.getScore();
-            if (score > 100 && score < 200) {
+            if (score > 1000) {
                 downloadUrl(url);
             }
 //            i++;
