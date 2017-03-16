@@ -1,6 +1,10 @@
 package com.jshah.wallpaperbot;
 
-
+import com.jshah.wallpaperbot.resources.AppResources;
+import com.jshah.wallpaperbot.resources.ConfigHandler;
+import com.jshah.wallpaperbot.types.ImageHandler;
+import com.jshah.wallpaperbot.types.ImageRequest;
+import com.jshah.wallpaperbot.types.ImgurRequest;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.UserAgent;
 import net.dean.jraw.http.oauth.Credentials;
@@ -10,14 +14,10 @@ import net.dean.jraw.models.Submission;
 import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SubredditPaginator;
 import net.dean.jraw.paginators.TimePeriod;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -25,80 +25,72 @@ import java.util.Properties;
  */
 
 public class Wallpaperbot {
-    private final Properties properties = new Properties();
-    private InputStream inputStream = null;
-
     public void run() {
-        // read from config.properties
-        loadProperties();
-        String password = properties.getProperty("password");
-        String secret = properties.getProperty("secret");
-
-        UserAgent userAgent = UserAgent.of(AppResources.platform, AppResources.clientID, AppResources.version, AppResources.username);
-        RedditClient reddit = new RedditClient(userAgent);
-        Credentials credentials = Credentials.script(AppResources.username, password, AppResources.clientID, secret);
-        authenticate(reddit, credentials);
-
-        // find top wallpapers
+        RedditClient reddit = authenticateReddit();
         wallpapersPaginator(reddit);
     }
 
+    private ImageHandler findRequestType(String url) {
+        if (url.contains("imgur.com") && !url.contains("i.imgur.com")) {
+            return new ImgurRequest();
+        }
+        else {
+            return new ImageRequest();
+        }
+    }
+
     private void downloadUrl(String url) {
-        try {
-            URL myUrl = new URL(url);
-            String fileName = FilenameUtils.getName(myUrl.getPath());
-            File file = new File("files/" + fileName);
-            FileUtils.copyURLToFile(myUrl, file);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ImageHandler imageHandler = findRequestType(url);
+        imageHandler.setupDownload(url);
+        imageHandler.executeDownload();
     }
 
-    private void sleep() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
+    /*
+     * Find top wallpapers of the week in /r/wallpapers and download image for post > 1000 score
+     */
     private void wallpapersPaginator(RedditClient reddit) {
         SubredditPaginator paginator = new SubredditPaginator(reddit);
-        paginator.setLimit(10);
+        paginator.setLimit(25);
         paginator.setSorting(Sorting.TOP);
         paginator.setTimePeriod(TimePeriod.WEEK);
         paginator.setSubreddit("wallpapers");
 
+        // paginator.next() flips through each page, need to handle logic for multiple pages and see what happens
+        // what is max limit per page?
+//        int i = 1;
         Listing<Submission> listing = paginator.next(true);
         for (Submission post : listing) {
-//            String title = post.getTitle();
             String url = post.getUrl();
             Integer score = post.getScore();
-
             if (score > 1000) {
                 downloadUrl(url);
             }
-            sleep();
-//            System.out.println(String.format("%d: %s [%s] : %s", i, title, score, url));
+//            i++;
+//            System.out.println(i + ": " + post.getTitle() + " " + score);
         }
     }
 
-    private void authenticate(RedditClient reddit, Credentials credentials) {
+    private RedditClient authenticateReddit() {
+        // read from config.properties
+        ConfigHandler configHandler = new ConfigHandler();
+        Properties properties = configHandler.loadProperties();
+        String password = properties.getProperty("redditPassword");
+        String secret = properties.getProperty("redditSecret");
+        String clientID = properties.getProperty("redditClientID");
+
+        UserAgent userAgent = UserAgent.of(AppResources.platform, clientID, AppResources.version, AppResources.username);
+        RedditClient reddit = new RedditClient(userAgent);
+        Credentials credentials = Credentials.script(AppResources.username, password, clientID, secret);
+
         try {
             OAuthData oAuthData = reddit.getOAuthHelper().easyAuth(credentials);
             reddit.authenticate(oAuthData);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
-
-    private void loadProperties() {
-        try {
-            inputStream = new FileInputStream(AppResources.config);
-            properties.load(inputStream);
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        finally {
+            configHandler.closeProperties();
         }
+        return reddit;
     }
-
 }
