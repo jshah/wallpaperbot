@@ -10,7 +10,7 @@ This is a project I'm doing for fun since I like collecting wallpapers. It's sti
 
 1) Clone this repo
 2) Make a Script App on Reddit by following this: https://github.com/reddit/reddit/wiki/OAuth2
-3) Replace redditID, redditSecret & redditPassword in config.properties.example with your apps id, app secret, and your reddit user's password
+3) Replace <redditID>, <redditSecret> & <redditPassword> in config.properties.example with your apps id, app secret, and your reddit user's password
 4) Rename config.properties.example to config.properties
 5) In the root folder of the project, run `gradle fatJar`
 6) Then run, `java -jar build/libs/wallpaperbot-all-1.0.jar`
