@@ -55,9 +55,6 @@ public class Wallpaperbot {
         paginator.setTimePeriod(TimePeriod.WEEK);
         paginator.setSubreddit("wallpapers");
 
-        // paginator.next() flips through each page, need to handle logic for multiple pages and see what happens
-        // what is max limit per page?
-//        int i = 1;
         Listing<Submission> listing = paginator.next(true);
         for (Submission post : listing) {
             String url = post.getUrl();
@@ -65,8 +62,6 @@ public class Wallpaperbot {
             if (score > 1000) {
                 downloadUrl(url);
             }
-//            i++;
-//            System.out.println(i + ": " + post.getTitle() + " " + score);
         }
     }
 
