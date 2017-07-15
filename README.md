@@ -14,4 +14,4 @@ This is a project I'm doing for fun since I like collecting wallpapers. It's sti
 4) Rename config.properties.example to config.properties
 5) In the root folder of the project, run `gradle fatJar`
 6) Then run, `java -jar build/libs/wallpaperbot-all-1.0.jar`
-7) Wallpapers should be downloads into a folder called files in the root folder
+7) Wallpapers should be downloaded into a folder called files in the root folder
