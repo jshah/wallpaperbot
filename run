@@ -1,0 +1,3 @@
+#!/bin/bash
+gradle fatJar
+java -jar build/libs/wallpaperbot-all-1.0.jar
