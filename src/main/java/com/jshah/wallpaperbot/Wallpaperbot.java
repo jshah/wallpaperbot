@@ -25,18 +25,25 @@ import java.util.Properties;
  */
 
 public class Wallpaperbot {
+    private String files = "files";
+    private String images = "images.zip";
+
     public void run() {
         RedditClient reddit = authenticateReddit();
         Listing<Submission> page = wallpapersPaginator(reddit);
         downloadTopImages(page);
         zipImages();
-        // Email.sendMail("/images.zip");
+        Email.sendMail("/images.zip");
     }
 
     private void zipImages() {
-        String currPath = System.getProperty("user.dir");
-        System.out.println(currPath);
-        ZipUtil.pack(new File(currPath + "/files"), new File(currPath + "/images.zip"));
+        try {
+            ZipUtil.pack(new File(files), new File(images));
+            System.out.println("zipped images into 'images.zip'");
+        }
+        catch (Exception e){
+            System.out.println("zip failed");
+        }
     }
 
     private ImageHandler findRequestType(String url) {
