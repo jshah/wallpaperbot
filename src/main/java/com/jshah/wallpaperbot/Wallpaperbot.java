@@ -1,5 +1,6 @@
 package com.jshah.wallpaperbot;
 
+import com.jshah.wallpaperbot.external.Email;
 import com.jshah.wallpaperbot.resources.AppResources;
 import com.jshah.wallpaperbot.resources.ConfigHandler;
 import com.jshah.wallpaperbot.types.ImageHandler;
@@ -14,7 +15,9 @@ import net.dean.jraw.models.Submission;
 import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SubredditPaginator;
 import net.dean.jraw.paginators.TimePeriod;
+import org.zeroturnaround.zip.ZipUtil;
 
+import java.io.File;
 import java.util.Properties;
 
 /**
@@ -24,7 +27,16 @@ import java.util.Properties;
 public class Wallpaperbot {
     public void run() {
         RedditClient reddit = authenticateReddit();
-        wallpapersPaginator(reddit);
+        Listing<Submission> page = wallpapersPaginator(reddit);
+        downloadTopImages(page);
+        zipImages();
+        // Email.sendMail("/images.zip");
+    }
+
+    private void zipImages() {
+        String currPath = System.getProperty("user.dir");
+        System.out.println(currPath);
+        ZipUtil.pack(new File(currPath + "/files"), new File(currPath + "/images.zip"));
     }
 
     private ImageHandler findRequestType(String url) {
@@ -43,23 +55,29 @@ public class Wallpaperbot {
     }
 
     /*
-     * Find top wallpapers of the week in /r/wallpapers and download image for post > 1000 score
+     * Find top wallpapers of the week in /r/wallpapers and download image for post > 1000 score in the first page
      */
-    private void wallpapersPaginator(RedditClient reddit) {
-        SubredditPaginator paginator = new SubredditPaginator(reddit);
-        paginator.setLimit(25);
-        paginator.setSorting(Sorting.TOP);
-        paginator.setTimePeriod(TimePeriod.WEEK);
-        paginator.setSubreddit("wallpapers");
-
-        Listing<Submission> listing = paginator.next(true);
-        for (Submission post : listing) {
+    private void downloadTopImages(Listing<Submission> page) {
+        for (Submission post : page) {
             String url = post.getUrl();
             Integer score = post.getScore();
             if (score > 1000) {
                 downloadUrl(url);
             }
         }
+    }
+
+    /*
+     * Get first page of /r/wallpapers with 25 max posts over last week
+     */
+    private Listing<Submission> wallpapersPaginator(RedditClient reddit) {
+        SubredditPaginator paginator = new SubredditPaginator(reddit);
+        paginator.setLimit(25);
+        paginator.setSorting(Sorting.TOP);
+        paginator.setTimePeriod(TimePeriod.WEEK);
+        paginator.setSubreddit("wallpapers");
+
+        return paginator.next(true);
     }
 
     private RedditClient authenticateReddit() {
@@ -69,6 +87,7 @@ public class Wallpaperbot {
         String password = properties.getProperty("redditPassword");
         String secret = properties.getProperty("redditSecret");
         String clientID = properties.getProperty("redditClientID");
+        configHandler.closeProperties();
 
         UserAgent userAgent = UserAgent.of(AppResources.platform, clientID, AppResources.version, AppResources.username);
         RedditClient reddit = new RedditClient(userAgent);
@@ -80,9 +99,7 @@ public class Wallpaperbot {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        finally {
-            configHandler.closeProperties();
-        }
+
         return reddit;
     }
 }
