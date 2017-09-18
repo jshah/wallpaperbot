@@ -14,6 +14,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -21,19 +22,12 @@ import java.util.Properties;
  */
 
 public class Email {
-    final private String username;
-    final private String password;
+    private final String username;
+    private final String password;
 
     public Email() {
-        ConfigHandler configHandler = new ConfigHandler();
-        Properties properties = configHandler.loadProperties();
-
-        this.username = properties.getProperty("gmailUsername");
-        this.password = properties.getProperty("gmailPassword");
-        System.out.println(username);
-        System.out.println(password);
-
-        configHandler.closeProperties();
+        this.username = ConfigHandler.getProperty("gmailUsername");
+        this.password = ConfigHandler.getProperty("gmailPassword");
     }
 
     public void sendMail(String filename) {
@@ -57,18 +51,20 @@ public class Email {
             message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(username));
-            message.setSubject("Top Wallpapers From /r/wallpapers Zipped");
-            message.setText("PFA");
-
-            MimeBodyPart messageBodyPart = new MimeBodyPart();
+            message.setSubject("Top Wallpapers From /r/wallpapers");
 
             Multipart multipart = new MimeMultipart();
 
-            messageBodyPart = new MimeBodyPart();
+            MimeBodyPart messageBody = new MimeBodyPart();
+            messageBody.setText("This email contains the top wallpapers from /r/wallpapers over the last week that have a post score of 1000 or above.");
+
+            MimeBodyPart messageFilePart = new MimeBodyPart();
             DataSource source = new FileDataSource(filename);
-            messageBodyPart.setDataHandler(new DataHandler(source));
-            messageBodyPart.setFileName(filename);
-            multipart.addBodyPart(messageBodyPart);
+            messageFilePart.setDataHandler(new DataHandler(source));
+            messageFilePart.setFileName(filename);
+
+            multipart.addBodyPart(messageBody);
+            multipart.addBodyPart(messageFilePart);
 
             message.setContent(multipart);
 

@@ -5,8 +5,6 @@ package com.jshah.wallpaperbot.resources;
  */
 
 public class AppResources {
-    public static final String username = "thebadshah";
-
     public static final String version = "1.0";
     public static final String platform = "desktop";
 

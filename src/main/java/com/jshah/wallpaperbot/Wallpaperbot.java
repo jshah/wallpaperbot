@@ -90,16 +90,14 @@ public class Wallpaperbot {
 
     private RedditClient authenticateReddit() {
         // read from config.properties
-        ConfigHandler configHandler = new ConfigHandler();
-        Properties properties = configHandler.loadProperties();
-        String password = properties.getProperty("redditPassword");
-        String secret = properties.getProperty("redditSecret");
-        String clientID = properties.getProperty("redditClientID");
-        configHandler.closeProperties();
+        String username = ConfigHandler.getProperty("redditUsername");
+        String password = ConfigHandler.getProperty("redditPassword");
+        String secret = ConfigHandler.getProperty("redditSecret");
+        String clientID = ConfigHandler.getProperty("redditClientID");
 
-        UserAgent userAgent = UserAgent.of(AppResources.platform, clientID, AppResources.version, AppResources.username);
+        UserAgent userAgent = UserAgent.of(AppResources.platform, clientID, AppResources.version, username);
         RedditClient reddit = new RedditClient(userAgent);
-        Credentials credentials = Credentials.script(AppResources.username, password, clientID, secret);
+        Credentials credentials = Credentials.script(username, password, clientID, secret);
 
         try {
             OAuthData oAuthData = reddit.getOAuthHelper().easyAuth(credentials);
