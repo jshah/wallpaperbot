@@ -10,24 +10,19 @@ import java.util.Properties;
  */
 
 public class ConfigHandler {
-    private final Properties properties = new Properties();
-    private InputStream inputStream;
+    private static Properties properties = new Properties();
 
-    public Properties loadProperties() {
+    static {
         try {
-            inputStream = new FileInputStream(AppResources.config);
+            InputStream inputStream = new FileInputStream(AppResources.config);
             properties.load(inputStream);
+            inputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return properties;
     }
 
-    public void closeProperties() {
-        try {
-            inputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static String getProperty(String key) {
+        return properties.getProperty(key);
     }
 }
