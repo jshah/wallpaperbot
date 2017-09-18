@@ -22,7 +22,7 @@ public abstract class Request {
             FileUtils.copyURLToFile(myUrl, file);
         } catch (Exception e) {
             System.out.println("Unable to download file from: " + url);
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 }

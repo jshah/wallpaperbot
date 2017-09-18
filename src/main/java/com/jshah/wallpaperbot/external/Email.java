@@ -1,5 +1,7 @@
 package com.jshah.wallpaperbot.external;
 
+import com.jshah.wallpaperbot.resources.ConfigHandler;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -19,13 +21,26 @@ import java.util.Properties;
  */
 
 public class Email {
-    final static String username = "contactjay@gmail.com";
-    final static String password = "*****";
+    final private String username;
+    final private String password;
 
-    public static void sendMail(String filename) {
+    public Email() {
+        ConfigHandler configHandler = new ConfigHandler();
+        Properties properties = configHandler.loadProperties();
+
+        this.username = properties.getProperty("gmailUsername");
+        this.password = properties.getProperty("gmailPassword");
+        System.out.println(username);
+        System.out.println(password);
+
+        configHandler.closeProperties();
+    }
+
+    public void sendMail(String filename) {
         Properties props = new Properties();
-        props.put("mail.smtp.auth", true);
-        props.put("mail.smtp.starttls.enable", true);
+        props.setProperty("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
 
@@ -42,7 +57,7 @@ public class Email {
             message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(username));
-            message.setSubject("Testing Subject");
+            message.setSubject("Top Wallpapers From /r/wallpapers Zipped");
             message.setText("PFA");
 
             MimeBodyPart messageBodyPart = new MimeBodyPart();
