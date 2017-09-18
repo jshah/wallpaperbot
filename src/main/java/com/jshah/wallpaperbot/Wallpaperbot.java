@@ -33,7 +33,8 @@ public class Wallpaperbot {
         Listing<Submission> page = wallpapersPaginator(reddit);
         downloadTopImages(page);
         zipImages();
-        Email.sendMail("/images.zip");
+        Email email = new Email();
+        email.sendMail(images);
     }
 
     private void zipImages() {
