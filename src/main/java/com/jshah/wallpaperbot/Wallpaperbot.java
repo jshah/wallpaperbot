@@ -25,18 +25,26 @@ import java.util.Properties;
  */
 
 public class Wallpaperbot {
+    private String files = "files";
+    private String images = "images.zip";
+
     public void run() {
         RedditClient reddit = authenticateReddit();
         Listing<Submission> page = wallpapersPaginator(reddit);
         downloadTopImages(page);
         zipImages();
-        // Email.sendMail("/images.zip");
+        Email email = new Email();
+        email.sendMail(images);
     }
 
     private void zipImages() {
-        String currPath = System.getProperty("user.dir");
-        System.out.println(currPath);
-        ZipUtil.pack(new File(currPath + "/files"), new File(currPath + "/images.zip"));
+        try {
+            ZipUtil.pack(new File(files), new File(images));
+            System.out.println("zipped images into 'images.zip'");
+        }
+        catch (Exception e){
+            System.out.println("zip failed");
+        }
     }
 
     private ImageHandler findRequestType(String url) {
@@ -82,16 +90,14 @@ public class Wallpaperbot {
 
     private RedditClient authenticateReddit() {
         // read from config.properties
-        ConfigHandler configHandler = new ConfigHandler();
-        Properties properties = configHandler.loadProperties();
-        String password = properties.getProperty("redditPassword");
-        String secret = properties.getProperty("redditSecret");
-        String clientID = properties.getProperty("redditClientID");
-        configHandler.closeProperties();
+        String username = ConfigHandler.getProperty("redditUsername");
+        String password = ConfigHandler.getProperty("redditPassword");
+        String secret = ConfigHandler.getProperty("redditSecret");
+        String clientID = ConfigHandler.getProperty("redditClientID");
 
-        UserAgent userAgent = UserAgent.of(AppResources.platform, clientID, AppResources.version, AppResources.username);
+        UserAgent userAgent = UserAgent.of(AppResources.platform, clientID, AppResources.version, username);
         RedditClient reddit = new RedditClient(userAgent);
-        Credentials credentials = Credentials.script(AppResources.username, password, clientID, secret);
+        Credentials credentials = Credentials.script(username, password, clientID, secret);
 
         try {
             OAuthData oAuthData = reddit.getOAuthHelper().easyAuth(credentials);
