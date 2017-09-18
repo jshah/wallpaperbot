@@ -29,4 +29,5 @@ dependencies {
     compile 'org.slf4j:slf4j-simple:1.6.1'
     compile 'commons-io:commons-io:2.5'
     compile 'org.zeroturnaround:zt-zip:1.12'
+    compile 'javax.mail:mail:1.4.1'
 }
