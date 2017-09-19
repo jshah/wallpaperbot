@@ -18,7 +18,6 @@ import net.dean.jraw.paginators.TimePeriod;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.File;
-import java.util.Properties;
 
 /**
  * Created by jay.shah on 3/9/17.
