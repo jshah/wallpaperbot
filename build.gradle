@@ -34,4 +34,5 @@ dependencies {
     compile 'org.zeroturnaround:zt-zip:1.12'
     compile 'javax.mail:mail:1.4.1'
     compile 'org.eclipse.jetty:jetty-home:9.4.6.v20170531'
+    compile 'org.mongodb:mongo-java-driver:3.5.0'
 }

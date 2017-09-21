@@ -1,5 +1,6 @@
 package com.jshah;
 
+import com.jshah.db.MongoDB;
 import com.jshah.wallpaperbot.Wallpaperbot;
 import com.jshah.web.JettyWebServer;
 
@@ -9,14 +10,19 @@ import com.jshah.web.JettyWebServer;
 
 public class Runner {
     public static void main(String[] args) {
-        Wallpaperbot wallpaperbot = new Wallpaperbot();
-        JettyWebServer webServer = new JettyWebServer();
         try {
-            webServer.setupWebServer();
+            JettyWebServer webServer = new JettyWebServer();
+//            webServer.setupWebServer();
         } catch (Exception e) {
-            System.out.println("Server failed to start");
             e.printStackTrace();
         }
-        wallpaperbot.run();
+
+        MongoDB db = new MongoDB();
+        db.setupMongoDb();
+
+//        Wallpaperbot wallpaperbot = new Wallpaperbot();
+//        wallpaperbot.run();
     }
+
+
 }
