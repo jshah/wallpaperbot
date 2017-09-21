@@ -26,6 +26,5 @@ public class MongoDB {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
