@@ -7,13 +7,16 @@ sourceCompatibility = 1.8
 
 //create a single Jar with all dependencies
 task fatJar(type: Jar) {
+    doFirst {
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
     manifest {
         attributes 'Implementation-Title': 'WallpaperBot Jar',
                 'Implementation-Version': version,
                 'Main-Class': 'com.jshah.Runner'
     }
     baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
     with jar
 }
 
@@ -30,4 +33,6 @@ dependencies {
     compile 'commons-io:commons-io:2.5'
     compile 'org.zeroturnaround:zt-zip:1.12'
     compile 'javax.mail:mail:1.4.1'
+    compile 'org.eclipse.jetty:jetty-home:9.4.6.v20170531'
+    compile 'org.mongodb:mongo-java-driver:3.5.0'
 }
