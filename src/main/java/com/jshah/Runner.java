@@ -10,18 +10,18 @@ import com.jshah.web.JettyWebServer;
 
 public class Runner {
     public static void main(String[] args) {
-        try {
-            JettyWebServer webServer = new JettyWebServer();
+//        try {
+//            JettyWebServer webServer = new JettyWebServer();
 //            webServer.setupWebServer();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         MongoDB db = new MongoDB();
         db.setupMongoDb();
 
-//        Wallpaperbot wallpaperbot = new Wallpaperbot();
-//        wallpaperbot.run();
+        Wallpaperbot wallpaperbot = new Wallpaperbot();
+        wallpaperbot.run();
     }
 
 
