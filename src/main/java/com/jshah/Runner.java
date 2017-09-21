@@ -4,6 +4,8 @@ import com.jshah.db.MongoDB;
 import com.jshah.wallpaperbot.Wallpaperbot;
 import com.jshah.web.JettyWebServer;
 
+import java.util.Arrays;
+
 /**
  * Created by jay.shah on 3/8/17.
  */
@@ -18,8 +20,6 @@ public class Runner {
 //        }
 
         MongoDB db = new MongoDB();
-        db.setupMongoDb();
-
         Wallpaperbot wallpaperbot = new Wallpaperbot();
         wallpaperbot.run();
     }
