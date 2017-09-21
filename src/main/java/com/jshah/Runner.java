@@ -23,6 +23,4 @@ public class Runner {
         Wallpaperbot wallpaperbot = new Wallpaperbot();
         wallpaperbot.run();
     }
-
-
 }
