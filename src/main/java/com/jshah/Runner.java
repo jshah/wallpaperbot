@@ -12,14 +12,14 @@ import java.util.Arrays;
 
 public class Runner {
     public static void main(String[] args) {
-//        try {
-//            JettyWebServer webServer = new JettyWebServer();
-//            webServer.setupWebServer();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            JettyWebServer webServer = new JettyWebServer();
+            webServer.setupWebServer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        MongoDB db = new MongoDB();
+//        MongoDB db = new MongoDB();
         Wallpaperbot wallpaperbot = new Wallpaperbot();
         wallpaperbot.run();
     }
