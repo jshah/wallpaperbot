@@ -1,9 +1,8 @@
 group 'jshah'
 
-apply plugin: 'java'
-
 version = '1.0'
-sourceCompatibility = 1.8
+
+apply plugin: 'java'
 
 //create a single Jar with all dependencies
 task fatJar(type: Jar) {
@@ -15,6 +14,7 @@ task fatJar(type: Jar) {
                 'Implementation-Version': version,
                 'Main-Class': 'com.jshah.Runner'
     }
+
     baseName = project.name + '-all'
     exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
     with jar
@@ -33,6 +33,7 @@ dependencies {
     compile 'commons-io:commons-io:2.5'
     compile 'org.zeroturnaround:zt-zip:1.12'
     compile 'javax.mail:mail:1.4.1'
-    compile 'org.eclipse.jetty:jetty-home:9.4.6.v20170531'
     compile 'org.mongodb:mongo-java-driver:3.5.0'
+    compile 'org.eclipse.jetty:jetty-webapp:9.4.7.v20170914'
 }
+
