@@ -1,4 +1,4 @@
-package com.jshah.wallpaperbot.resources;
+package main.java.com.jshah.wallpaperbot.resources;
 
 import java.io.FileInputStream;
 import java.io.IOException;

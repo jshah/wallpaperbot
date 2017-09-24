@@ -1,4 +1,4 @@
-package com.jshah.wallpaperbot.types;
+package main.java.com.jshah.wallpaperbot.types;
 
 /**
  * Created by jay.shah on 3/12/17.

@@ -1,6 +1,6 @@
-package com.jshah.wallpaperbot.external;
+package main.java.com.jshah.wallpaperbot.external;
 
-import com.jshah.wallpaperbot.resources.ConfigHandler;
+import main.java.com.jshah.wallpaperbot.resources.ConfigHandler;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
