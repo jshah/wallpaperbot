@@ -1,0 +1,27 @@
+version = '1.0'
+
+apply plugin: 'java'
+
+task fatJar(type: Jar) {
+    doFirst {
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+    manifest {
+        attributes 'Implementation-Title': 'WallpaperBot Jar',
+                'Implementation-Version': version,
+                'Main-Class': 'com.jshah.Runner'
+    }
+
+    baseName = project.name + '-all'
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+    with jar
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile 'org.eclipse.jetty:jetty-webapp:9.4.7.v20170914'
+}
