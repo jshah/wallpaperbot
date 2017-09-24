@@ -1,3 +1,3 @@
 #!/bin/bash
-gradle fatJar
+gradle fatJarWebApp
 java -jar webapp/build/libs/webapp-all-1.0.jar

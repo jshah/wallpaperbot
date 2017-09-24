@@ -1,4 +1,21 @@
+version = '1.0'
+
 apply plugin: 'java'
+
+task fatJarServer(type: Jar) {
+    doFirst {
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+    manifest {
+        Attributes 'Implementation-Title': 'Server Jar',
+                'Implementation-Version': version,
+                'Main-Class': 'com.jshah.ServerRunner'
+    }
+
+    baseName = project.name + '-all'
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+    with jar
+}
 
 repositories {
     mavenCentral()

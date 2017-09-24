@@ -1,4 +1,4 @@
-package main.java.com.jshah.wallpaperbot.types;
+package com.jshah.wallpaperbot.types;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
