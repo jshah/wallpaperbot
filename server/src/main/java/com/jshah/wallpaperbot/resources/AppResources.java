@@ -1,4 +1,4 @@
-package main.java.com.jshah.wallpaperbot.resources;
+package com.jshah.wallpaperbot.resources;
 
 /**
  * Created by jay.shah on 3/9/17.

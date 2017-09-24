@@ -1,4 +1,4 @@
-package main.java.com.jshah.db;
+package com.jshah.db;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;

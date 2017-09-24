@@ -1,11 +1,11 @@
-package main.java.com.jshah.wallpaperbot;
+package com.jshah.wallpaperbot;
 
-import main.java.com.jshah.wallpaperbot.external.Email;
-import main.java.com.jshah.wallpaperbot.resources.AppResources;
-import main.java.com.jshah.wallpaperbot.resources.ConfigHandler;
-import main.java.com.jshah.wallpaperbot.types.ImageHandler;
-import main.java.com.jshah.wallpaperbot.types.ImageRequest;
-import main.java.com.jshah.wallpaperbot.types.ImgurRequest;
+import com.jshah.wallpaperbot.external.Email;
+import com.jshah.wallpaperbot.resources.AppResources;
+import com.jshah.wallpaperbot.resources.ConfigHandler;
+import com.jshah.wallpaperbot.types.ImageHandler;
+import com.jshah.wallpaperbot.types.ImageRequest;
+import com.jshah.wallpaperbot.types.ImgurRequest;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.UserAgent;
 import net.dean.jraw.http.oauth.Credentials;

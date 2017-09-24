@@ -1,7 +1,7 @@
-package main.java.com.jshah;
+package com.jshah;
 
-import main.java.com.jshah.db.MongoDB;
-import main.java.com.jshah.wallpaperbot.Wallpaperbot;
+import com.jshah.db.MongoDB;
+import com.jshah.wallpaperbot.Wallpaperbot;
 
 /**
  * Created by jay.shah on 9/23/17.
