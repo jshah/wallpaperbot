@@ -2,4 +2,8 @@
 rm images.zip
 rm -rf files
 rm logs/*
+
+source ./stop
+rm pids
+
 gradle clean

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+source pids
+kill $webappPid
+kill $serverPid
