@@ -1,3 +1,7 @@
 #!/bin/bash
 gradle fatJarWebApp
-java -jar webapp/build/libs/webapp-all-1.0.jar
+gradle fatJarServer
+
+
+java -jar webapp/build/libs/webapp-all-1.0.jar > logs/webapp.log 2>&1 &
+java -jar server/build/libs/server-all-1.0.jar > logs/server.log 2>&1

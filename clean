@@ -1,4 +1,5 @@
 #!/bin/bash
 rm images.zip
 rm -rf files
+rm logs/*
 gradle clean

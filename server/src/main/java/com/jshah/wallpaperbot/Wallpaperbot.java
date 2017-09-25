@@ -33,7 +33,7 @@ public class Wallpaperbot {
         downloadTopImages(page);
         zipImages();
         Email email = new Email();
-        email.sendMail(images);
+//        email.sendMail(images);
     }
 
     private void zipImages() {
