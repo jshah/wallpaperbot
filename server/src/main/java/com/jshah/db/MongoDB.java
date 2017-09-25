@@ -1,17 +1,12 @@
 package com.jshah.db;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
-import javax.print.Doc;
 import java.util.List;
-
-import static com.mongodb.client.model.Filters.eq;
 
 /**
  * Created by jay.shah on 9/20/17.
@@ -37,11 +32,11 @@ public class MongoDB {
     }
 
     public void deleteUser(String email) {
-        Document myDoc = collection.find(eq("email", email)).first();
+        Document myDoc = collection.find(Filters.eq("email", email)).first();
         collection.deleteOne(myDoc);
     }
 
     public Document findUser(String email) {
-        return collection.find(eq("email", email)).first();
+        return collection.find(Filters.eq("email", email)).first();
     }
 }

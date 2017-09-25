@@ -1,3 +1,11 @@
 #!/bin/bash
-gradle fatJar
-java -jar build/libs/wallpaperbot-all-1.0.jar
+gradle fatJarWebApp
+gradle fatJarServer
+
+
+java -jar webapp/build/libs/webapp-all-1.0.jar > logs/webapp.log 2>&1 &
+webappPid=$!
+echo "webappPid=$webappPid" > pids
+java -jar server/build/libs/server-all-1.0.jar > logs/server.log 2>&1 &
+serverPid=$!
+echo "serverPid=$serverPid" >> pids
