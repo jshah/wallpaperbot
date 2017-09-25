@@ -31,4 +31,5 @@ dependencies {
     compile 'org.zeroturnaround:zt-zip:1.12'
     compile 'javax.mail:mail:1.4.1'
     compile 'org.mongodb:mongo-java-driver:3.5.0'
+    compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-grizzly2-http', version: '2.25.1'
 }
