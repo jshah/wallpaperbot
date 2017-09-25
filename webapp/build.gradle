@@ -7,7 +7,7 @@ task fatJarWebApp(type: Jar) {
         from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     }
     manifest {
-        attributes['Implementation-Title'] = 'Webapp Jar'
+        attributes['Implementation-Title'] = 'Webapp-Jar'
         attributes['Implementation-Version'] = version
         attributes['Main-Class'] = 'com.jshah.WebappRunner'
     }
