@@ -7,9 +7,9 @@ task fatJarServer(type: Jar) {
         from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     }
     manifest {
-        Attributes 'Implementation-Title': 'Server Jar',
-                'Implementation-Version': version,
-                'Main-Class': 'com.jshah.ServerRunner'
+
+        attributes['Implementation-Version'] = version
+        attributes['Main-Class'] = 'com.jshah.ServerRunner'
     }
 
     baseName = project.name + '-all'
