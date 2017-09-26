@@ -18,7 +18,7 @@ public class JettyWebServer {
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setDirectoriesListed(true);
         resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
-        resourceHandler.setResourceBase(".");
+        resourceHandler.setResourceBase("./WEB-INF");
 
         ContextHandler context = new ContextHandler();
         context.setContextPath("'/");
