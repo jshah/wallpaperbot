@@ -39,4 +39,4 @@ bin/
 *.zip
 
 # node
-/node_moules
+node_modules/
