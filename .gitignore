@@ -37,3 +37,6 @@ bin/
 
 # Zip
 *.zip
+
+# node
+node_modules/
