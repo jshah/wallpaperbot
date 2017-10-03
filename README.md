@@ -11,7 +11,9 @@ The goal is for this bot to be deployed on Heroku with a web ui which will allow
 # Dependencies
 
 MongoDB: https://www.mongodb.com/
+
 Jersey/Grizzly: https://jersey.github.io/
+
 Jetty: http://www.eclipse.org/jetty/
 
 
